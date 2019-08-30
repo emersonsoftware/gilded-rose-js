@@ -44,24 +44,32 @@ describe('GildedRose', () => {
 
   describe('Aged Brie', () => {
     beforeEach(() => {
-      subject.items.push(new Item('Aged Brie', 2, 0))
+      subject.items.push(new Item('Aged Brie', 3, 0))
     })
 
     it('increases in quality', () => {
       range(1).forEach(() => subject.updateQuality())
 
-      expect(subject.items[0].sellIn).to.eql(1)
+      expect(subject.items[0].sellIn).to.eql(2)
       expect(subject.items[0].quality).to.eql(1)
     })
     it('increases quality by two when sellIn has passed', () => {
-      range(4).forEach(() => subject.updateQuality())
+      range(5).forEach(() => subject.updateQuality())
 
       expect(subject.items[0].sellIn).to.eql(-2)
-      expect(subject.items[0].quality).to.eql(6)
+      expect(subject.items[0].quality).to.eql(7)
     })
     it('does not increase past 50 in quality', () => {
       range(55).forEach(() => subject.updateQuality())
 
+      expect(subject.items[0].quality).to.eql(50)
+    })
+    it('does not allow quality to go over 50', () => {
+      subject = new GildedRose()
+      subject.items.push(new Item('Backstage passes to a TAFKAL80ETC concert', 20, 20))
+
+      range(19).forEach(() => subject.updateQuality())
+      expect(subject.items[0].sellIn).to.eql(1)
       expect(subject.items[0].quality).to.eql(50)
     })
   })
