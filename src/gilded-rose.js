@@ -1,24 +1,25 @@
-function isUnderMaxQuality(item) {
-  return item.quality < 50
+function incQuality(item, amount) {
+  item.quality = Math.min(item.quality + amount, 50)
+}
+
+function decQuality(item, amount) {
+  item.quality = Math.max(item.quality - amount, 0)
 }
 
 function updateAgedBrie(item) {
   item.sellIn -= 1
-  if (isUnderMaxQuality(item)) {
-    item.quality += 1
-    if (item.sellIn < 0 && isUnderMaxQuality(item))
-      item.quality += 1
-  }
+  incQuality(item, 1)
+  if (item.sellIn < 0)
+    incQuality(item, 1)
 }
 
 function updateBackstagePass(item) {
   if (item.sellIn >= 0) {
-    if (isUnderMaxQuality(item))
-      item.quality += 1
-    if (item.sellIn <= 10 && isUnderMaxQuality(item))
-      item.quality += 1
-    if (item.sellIn <= 5 && isUnderMaxQuality(item))
-      item.quality += 1
+    incQuality(item, 1)
+    if (item.sellIn <= 10)
+      incQuality(item, 1)
+    if (item.sellIn <= 5)
+      incQuality(item, 1)
   }
 
   item.sellIn -= 1
@@ -29,20 +30,16 @@ function updateBackstagePass(item) {
 
 function updateConjured(item) {
   item.sellIn -= 1
-  item.quality -= 2
-
+  decQuality(item, 2)
   if (item.sellIn < 0)
-    item.quality -= 2
-  if (item.quality < 0)
-    item.quality = 0
+    decQuality(item, 2)
 }
 
 function updateNormalItem(item) {
   item.sellIn -= 1
-  if (item.quality > 0)
-    item.quality -= 1
-  if (item.sellIn < 0 && item.quality > 0)
-    item.quality -= 1
+  decQuality(item, 1)
+  if (item.sellIn < 0)
+    decQuality(item, 1)
 }
 
 module.exports = class GildedRose {
