@@ -117,4 +117,31 @@ describe('GildedRose', () => {
       expect(subject.items[0].quality).to.eql(0)
     })
   })
+
+  describe('Conjured items', () => {
+    beforeEach(() => {
+      subject.items.push(new Item('Conjured Mana Cake', 3, 6))
+    })
+
+    it('decreases in quality twice as fast as normal items', () => {
+      subject.updateQuality()
+
+      expect(subject.items[0].sellIn).to.eql(2)
+      expect(subject.items[0].quality).to.eql(4)
+    })
+    it('quality does not go past zero', () => {
+      range(4).forEach(() => subject.updateQuality())
+
+      expect(subject.items[0].sellIn).to.eql(-1)
+      expect(subject.items[0].quality).to.eql(0)
+    })
+    it('decreases in quality even faster when expired', () => {
+      subject = new GildedRose()
+      subject.items.push(new Item('Conjured Mana Cake', 3, 12))
+
+      range(4).forEach(() => subject.updateQuality())
+
+      expect(subject.items[0].quality).to.eql(2)
+    })
+  })
 })

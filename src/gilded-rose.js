@@ -27,6 +27,16 @@ function updateBackstagePass(item) {
     item.quality = 0
 }
 
+function updateConjured(item) {
+  item.sellIn -= 1
+  item.quality -= 2
+
+  if (item.sellIn < 0)
+    item.quality -= 2
+  if (item.quality < 0)
+    item.quality = 0
+}
+
 function updateNormalItem(item) {
   item.sellIn -= 1
   if (item.quality > 0)
@@ -46,6 +56,8 @@ module.exports = class GildedRose {
           updateAgedBrie(item)
         } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
           updateBackstagePass(item)
+        } else if (item.name.startsWith('Conjured')) {
+          updateConjured(item)
         } else {
           updateNormalItem(item)
         }
